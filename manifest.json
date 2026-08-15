@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Review Mode",
+  "version": "1.0.0",
+  "description": "Annotate any web page, then copy an agent-ready follow-up prompt containing every comment.",
+  "permissions": ["storage", "scripting", "activeTab"],
+  "host_permissions": ["<all_urls>"],
+  "background": { "service_worker": "background.js" },
+  "action": {
+    "default_title": "Toggle review mode",
+    "default_icon": { "16": "icons/16.png", "48": "icons/48.png", "128": "icons/128.png" }
+  },
+  "icons": { "16": "icons/16.png", "48": "icons/48.png", "128": "icons/128.png" },
+  "commands": {
+    "toggle-review": {
+      "suggested_key": { "default": "Alt+R", "mac": "Alt+R" },
+      "description": "Toggle review mode on the current page"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*", "file:///*"],
+      "js": ["review-mode.js", "content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Review Mode — demo document</title>
+</head>
+<body>
+<style>
+  :root {
+    --bg: #f2f4f5; --panel: #ffffff; --panel-2: #f8fafb;
+    --ink: #161d24; --ink-2: #46525c; --ink-3: #76828c;
+    --line: #dbe1e6; --line-2: #c3ccd3;
+    --ok: #0e7a5c; --ok-bg: #e3f1ea;
+    --accent: #6350c9; --accent-bg: #ece8f9;
+    --warn: #b23c2a; --warn-bg: #f9e9e5;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --r: 5px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #10151a; --panel: #181f26; --panel-2: #141b21;
+      --ink: #e6ebef; --ink-2: #a4afb8; --ink-3: #717d87;
+      --line: #29323a; --line-2: #3a454f;
+      --ok: #43bd93; --ok-bg: #12352a;
+      --accent: #a596ec; --accent-bg: #262046;
+      --warn: #e07a63; --warn-bg: #3d1f18;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.58; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 44px 26px 120px; }
+  header.doc { border-left: 4px solid var(--accent); padding: 2px 0 2px 20px; }
+  .kicker { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-3); }
+  h1 { font-size: 30px; line-height: 1.14; letter-spacing: -0.015em; margin: 8px 0 10px; }
+  header.doc p { margin: 0; color: var(--ink-2); max-width: 64ch; }
+  h2 { display: flex; align-items: baseline; gap: 12px; font-size: 17px; margin: 48px 0 6px; padding-top: 16px; border-top: 1px solid var(--line); }
+  h2 .eyebrow { font-family: var(--mono); font-size: 11px; font-weight: 500; color: var(--ink-3); }
+  p.lede { margin: 6px 0 16px; color: var(--ink-2); max-width: 72ch; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 20px; margin: 14px 0; }
+  .panel h3 { margin: 0 0 8px; font-size: 13.5px; }
+  code { font-family: var(--mono); font-size: 0.92em; }
+  pre { margin: 0; padding: 12px 14px; background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r); overflow-x: auto; font-family: var(--mono); font-size: 12.5px; line-height: 1.5; color: var(--ink-2); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th { text-align: left; font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-3); border-bottom: 1px solid var(--line-2); padding: 6px 10px 6px 0; }
+  td { border-bottom: 1px solid var(--line); padding: 8px 10px 8px 0; vertical-align: top; color: var(--ink-2); }
+  td:first-child { color: var(--ink); }
+  .chip { font-family: var(--mono); font-size: 11px; padding: 2px 8px; border-radius: 999px; white-space: nowrap; display: inline-block; }
+  .chip.ok { color: var(--ok); background: var(--ok-bg); }
+  .chip.warn { color: var(--warn); background: var(--warn-bg); }
+  .cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 700px) { .cols2 { grid-template-columns: 1fr; } }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px; }
+  .card h3 { margin: 0 0 6px; font-size: 13px; }
+  .card ul { margin: 0; padding-left: 18px; font-size: 12.8px; color: var(--ink-2); }
+  .card li { margin: 3px 0; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-bg); border-radius: 0 var(--r) var(--r) 0; padding: 10px 14px; margin: 14px 0; font-size: 13.5px; color: var(--ink-2); }
+  .callout b { color: var(--ink); }
+  figure { margin: 14px 0; }
+  figcaption { font-size: 12px; color: var(--ink-3); margin-top: 6px; }
+  ol.steps { margin: 10px 0 0; padding-left: 20px; font-size: 13.2px; color: var(--ink-2); }
+  ol.steps li { margin: 5px 0; }
+  footer { margin-top: 56px; font-size: 12px; color: var(--ink-3); border-top: 1px solid var(--line); padding-top: 14px; }
+</style>
+
+<div class="wrap">
+  <header class="doc">
+    <div class="kicker">review mode · demo document</div>
+    <h1>A page to practise on</h1>
+    <p>Every kind of block below is annotatable. Hit the <b>Review</b> pill bottom-right, click a paragraph, a table cell, a list item or the diagram — or select a phrase and use the ✎ bubble.</p>
+  </header>
+
+  <h2><span class="eyebrow">01</span> Paragraphs and phrases</h2>
+  <p class="lede">Clicking anywhere in this paragraph attaches a comment to the whole block. Selecting <em>just these seven words</em> attaches it to the phrase instead, and the highlight comes back on reload.</p>
+  <div class="callout"><b>Try a phrase.</b> A phrase-level comment carries both the quote and the surrounding block into the generated prompt, so an agent can find the text even if the paragraph has been edited since.</div>
+
+  <h2><span class="eyebrow">02</span> Tables</h2>
+  <p class="lede">Cells are separate anchors, so a comment lands on the row and column you meant.</p>
+  <div class="panel">
+    <table>
+      <thead><tr><th>Anchor kind</th><th>How it is stored</th><th>Survives an edit?</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Whole block</td>
+          <td>Structural path plus a hash of the block's text</td>
+          <td><span class="chip ok">yes</span> — falls back to a hash match anywhere on the page</td>
+        </tr>
+        <tr>
+          <td>Text selection</td>
+          <td>The same, plus character offsets into the block</td>
+          <td><span class="chip ok">yes</span> — then a search for the quoted text</td>
+        </tr>
+        <tr>
+          <td>Deleted anchor</td>
+          <td>Nothing left to match</td>
+          <td><span class="chip warn">flagged</span> — shown as <code>detached</code> in the sidebar and the prompt</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2><span class="eyebrow">03</span> Cards and lists</h2>
+  <div class="cols2">
+    <div class="card">
+      <h3>Comment kinds</h3>
+      <ul>
+        <li><b>Question</b> — answer it and fold the answer in.</li>
+        <li><b>Issue</b> — the claim is wrong; verify and correct.</li>
+        <li><b>Nit</b> — wording or formatting.</li>
+        <li><b>Idea</b> — evaluate, then apply or reject.</li>
+        <li><b>Praise</b> — leave that part alone.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Keys</h3>
+      <ul>
+        <li><code>Alt+R</code> toggles review mode.</li>
+        <li><code>⌘↵</code> saves the open comment.</li>
+        <li><code>Esc</code> closes the composer, then the sidebar.</li>
+        <li>Click a coloured pin to reopen a comment.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2><span class="eyebrow">04</span> Code and figures</h2>
+  <p class="lede">Preformatted blocks and images are anchors too.</p>
+  <div class="panel">
+<pre>&lt;script src="review-mode.js" defer&gt;&lt;/script&gt;</pre>
+  </div>
+  <figure>
+    <svg width="100%" height="120" viewBox="0 0 620 120" role="img" aria-label="page, comments, prompt">
+      <rect x="6" y="24" width="150" height="72" rx="6" fill="none" stroke="currentColor" opacity=".45"/>
+      <text x="81" y="65" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="currentColor">page</text>
+      <path d="M164 60 h60" stroke="currentColor" opacity=".45" fill="none"/>
+      <path d="M224 60 l-8 -4 v8 z" fill="currentColor" opacity=".45"/>
+      <rect x="232" y="24" width="150" height="72" rx="6" fill="none" stroke="currentColor" opacity=".45"/>
+      <text x="307" y="56" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="currentColor">comments</text>
+      <text x="307" y="74" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="currentColor" opacity=".6">anchored</text>
+      <path d="M390 60 h60" stroke="currentColor" opacity=".45" fill="none"/>
+      <path d="M450 60 l-8 -4 v8 z" fill="currentColor" opacity=".45"/>
+      <rect x="458" y="24" width="156" height="72" rx="6" fill="none" stroke="currentColor" opacity=".45"/>
+      <text x="536" y="65" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="currentColor">follow-up prompt</text>
+    </svg>
+    <figcaption>The whole pipeline: annotate in place, export one prompt.</figcaption>
+  </figure>
+
+  <h2><span class="eyebrow">05</span> Then export</h2>
+  <div class="panel">
+    <ol class="steps">
+      <li>Leave a few comments of different kinds.</li>
+      <li>Open the <b>n comments</b> pill to see them in document order.</li>
+      <li>Press <b>Copy follow-up prompt</b> and paste it at your agent.</li>
+      <li>Reload this page and re-enter review mode — everything comes back.</li>
+    </ol>
+  </div>
+
+  <footer>Demo document for the review-mode library. Comments live in this browser's storage only.</footer>
+</div>
+
+<script src="../review-mode.js" defer></script>
+</body>
+</html>
