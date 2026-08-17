@@ -1,8 +1,10 @@
 {
   "manifest_version": 3,
   "name": "Review Mode",
+  "short_name": "Review Mode",
   "version": "1.0.0",
   "description": "Annotate any web page, then copy an agent-ready follow-up prompt containing every comment.",
+  "homepage_url": "https://github.com/H3xept/review_mode",
   "permissions": ["storage", "scripting", "activeTab"],
   "host_permissions": ["<all_urls>"],
   "background": { "service_worker": "background.js" },

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="180" viewBox="0 0 720 180" role="img" aria-labelledby="title desc">
+  <title id="title">Review Mode</title>
+  <desc id="desc">A purple document mark with three anchored review comments beside the Review Mode wordmark.</desc>
+  <rect width="720" height="180" rx="28" fill="#f7f5ff"/>
+  <g transform="translate(42 30)">
+    <rect x="0" y="0" width="120" height="120" rx="24" fill="#6350c9"/>
+    <path d="M31 33h58M31 56h42M31 79h51" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".96"/>
+    <circle cx="96" cy="34" r="12" fill="#ef5b5b" stroke="#f7f5ff" stroke-width="5"/>
+    <circle cx="80" cy="78" r="12" fill="#20a378" stroke="#f7f5ff" stroke-width="5"/>
+    <path d="M34 97l16-4-12-12z" fill="#f6c14f" stroke="#f7f5ff" stroke-width="4" stroke-linejoin="round"/>
+  </g>
+  <text x="194" y="86" fill="#171b24" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="48" font-weight="720" letter-spacing="-1.5">Review Mode</text>
+  <text x="196" y="119" fill="#635f70" font-family="ui-monospace,'SFMono-Regular',Menlo,monospace" font-size="17">annotate the page · export the prompt</text>
+</svg>

@@ -1,2 +1,7 @@
 .DS_Store
+.claude/settings.local.json
+.review-mode/
+coverage/
+node_modules/
 *.zip
+*.tgz

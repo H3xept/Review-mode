@@ -1,136 +1,185 @@
-# Review Mode
+<p align="center">
+  <img src="assets/brand/review-mode.svg" alt="Review Mode — annotate the page, export the prompt" width="640">
+</p>
 
-Turn any HTML page into a review surface. Click a block or select text, attach a
-comment, then copy one follow-up prompt that carries every comment back to an
-agent.
+<p align="center">
+  Turn any HTML page into a private review surface.<br>
+  Leave anchored comments, then copy one structured prompt back to your coding agent.
+</p>
 
-Built for reviewing generated HTML documents, but it assumes nothing about them
-— it works on any page.
+<p align="center">
+  <a href="https://github.com/H3xept/review_mode/actions/workflows/check.yml"><img alt="Checks" src="https://github.com/H3xept/review_mode/actions/workflows/check.yml/badge.svg"></a>
+  <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-6350c9.svg"></a>
+  <img alt="Zero runtime dependencies" src="https://img.shields.io/badge/runtime_dependencies-0-0e7a5c.svg">
+</p>
 
+## What it does
+
+Review Mode adds a small review layer to any page. It does not require a framework, server, build step, or account.
+
+1. Click a block or select exact text.
+2. Add a Question, Issue, Nit, Idea, or Praise comment.
+3. Copy one follow-up prompt with every open comment in document order.
+4. Paste the prompt into your coding agent.
+
+Comments stay in browser storage. Review Mode sends no comment data to a server.
+
+<p align="center">
+  <img src="assets/demo/annotate.gif" alt="Adding an anchored comment with Review Mode" width="760">
+</p>
+
+<p align="center">
+  <img src="assets/demo/export.gif" alt="Opening the comment sidebar and exporting a follow-up prompt" width="760">
+</p>
+
+## Install in one line
+
+Add Review Mode to an HTML file from the GitHub repository:
+
+```bash
+npx --yes github:H3xept/review_mode install ./path/to/page.html
 ```
-review-mode.js   the whole library (no dependencies, no build step)
-manifest.json    Chrome MV3 manifest — the repo root IS the extension
-content.js       extension shell: toolbar/keyboard toggle, badge
-background.js    MV3 service worker
-icons/           toolbar icons
-demo/index.html  a page to practise on
+
+The installer copies the zero-dependency runtime to `.review-mode/review-mode.js` beside the page. It then adds one marked script block before `</body>`. Repeated runs make no extra changes.
+
+Remove the marked script block with:
+
+```bash
+npx --yes github:H3xept/review_mode remove ./path/to/page.html
 ```
 
-`review-mode.js` is the only file that matters. The extension files are a shell
-around it, so there is exactly one copy of the logic.
-
-## Two ways to load it
-
-### 1. Chrome extension (works on pages you cannot edit)
-
-1. `chrome://extensions` → enable **Developer mode** → **Load unpacked** →
-   pick this repository's root directory.
-2. For `file://` documents, open the extension's **Details** and enable
-   **Allow access to file URLs**.
-3. Click the toolbar icon (or press `Alt+R`) on any page to toggle review mode.
-   The badge shows the open comment count for that page.
-
-Note: branded Chrome 137+ ignores the `--load-extension` command-line flag, so
-load it through the extensions page as above.
-
-### 2. One script tag (travels with the document)
+You can also add the runtime by hand:
 
 ```html
 <script src="review-mode.js" defer></script>
 ```
 
-A floating **Review** pill appears bottom-right. `demo/index.html` carries this
-tag — open it directly from disk to try the whole flow. If a document that
-loads the library is shared on its own, the script 404s and the page renders
-normally.
+Open `demo/index.html` directly to try the complete flow.
 
-Options, as `data-` attributes on the script tag:
+## Install the agent skill
 
-| attribute | default | effect |
-|---|---|---|
-| `data-launcher="false"` | `true` | hide the floating pill; drive it via `ReviewMode` |
-| `data-open="true"` | `false` | enter review mode on load |
-| `data-extra=".myblock,figure>span"` | — | extra selectors to make annotatable |
+Install the `review-mode` skill through the [Skills CLI](https://github.com/vercel-labs/skills):
 
-Loading `page.html#review` opens review mode automatically when the page
-already has comments.
-
-A bookmarklet works too, but only against a served copy — a page on `http(s)`
-cannot pull a script off `file://`:
-
-```js
-javascript:(function(){var s=document.createElement('script');s.src='http://localhost:8000/review-mode.js';document.body.appendChild(s);})()
+```bash
+npx skills add H3xept/review_mode --skill review-mode -g -y
 ```
 
-Both loaders can be active at once. Whichever copy initialises first owns the
-page; the other one stands down and drives the owner through `CustomEvent`s, so
-the extension button still works on a page that ships its own script tag.
+The skill teaches supported coding agents to make HTML output reviewable. It also teaches them to process every exported comment.
 
-## Using it
+## Optional Claude Code post-hook
 
-| action | how |
+Install a project-local `PostToolUse` hook:
+
+```bash
+npx --yes github:H3xept/review_mode hook install
+```
+
+The hook runs after successful Claude Code `Write` and `Edit` calls. It adds Review Mode only to HTML files inside the current project.
+
+The command copies the hook under `.review-mode/`. It adds one entry to `.claude/settings.local.json`. Existing hook entries remain unchanged.
+
+Remove the hook with:
+
+```bash
+npx --yes github:H3xept/review_mode hook remove
+```
+
+Review `.claude/settings.local.json` before sharing the configuration. The Skills CLI installs files but does not run lifecycle hooks.
+
+## Chrome extension
+
+The repository root is also an unpacked Chrome Manifest V3 extension.
+
+1. Open `chrome://extensions`.
+2. Enable **Developer mode**.
+3. Select **Load unpacked**.
+4. Choose this repository root.
+5. Enable **Allow access to file URLs** in the extension details when needed.
+
+Click the toolbar icon or press `Alt+R` to toggle review mode. Chrome blocks extensions on internal browser pages and some protected pages.
+
+## Usage
+
+| Action | Control |
 |---|---|
-| toggle review mode | the **Review** pill, `Alt+R`, or the toolbar icon |
-| comment on a block | click any paragraph, list item, table cell, card, heading or image |
-| comment on a phrase | select text → **✎ Comment on selection** |
-| pick a kind | Question · Issue · Nit · Idea · Praise |
-| save | **Comment** or `⌘↵` |
-| reopen a comment | click its coloured pin |
-| see everything | the **n comments** pill |
-| export | **Copy follow-up prompt**, or **JSON** for the raw records |
+| Toggle review mode | **Review**, `Alt+R`, or the extension icon |
+| Comment on a block | Click a paragraph, heading, list item, table cell, card, or image |
+| Comment on exact text | Select text, then choose **Comment on selection** |
+| Save a comment | **Comment** or `⌘↵` / `Ctrl+Enter` |
+| Reopen a comment | Click its colored pin |
+| View all comments | Click the **n comments** pill |
+| Export feedback | Click **Copy follow-up prompt** |
+| Export raw records | Click **JSON** |
 
-Resolved comments stay in the page but drop out of the generated prompt.
+Resolved comments remain visible but leave the generated prompt.
 
-## The generated prompt
+### Script options
 
-Comments are emitted in document order, each with its section heading, its
-anchor, the exact quoted text, and — for a phrase-level comment — the
-surrounding block. The header tells the agent what each kind means:
+Set options through `data-` attributes on the script tag.
 
-```markdown
-# Review pass — eToro asks vs. verified continuations v1 — scope assessment
+| Attribute | Default | Effect |
+|---|---:|---|
+| `data-launcher="false"` | `true` | Hide the floating launcher |
+| `data-open="true"` | `false` | Open review mode on load |
+| `data-extra=".selector"` | none | Add custom annotatable selectors |
 
-Document: `file:///…/docs/2026-08-15-etoro-asks-vs-vc-scope.html`
-2 open comments (1 question, 1 idea), in document order.
+Loading `page.html#review` reopens review mode when the page already has comments.
 
-…
+## How anchors survive edits
 
-## 2. QUESTION — 05 Watcher triggers: how safe, precisely
-Anchor: `td` · text selection
+Each comment stores a structural path, a hash of the authored text, the quoted text, and optional character offsets.
 
-> 2.777 ETH
+Review Mode resolves an anchor in this order:
 
-Surrounding block: "Swap 5,000 USDC when ETH ≤ $1,800" = "swap 5,000 USDC for ≥ 2.777 ETH"
+1. The original path with the same text hash.
+2. A moved block with the same text hash.
+3. A block that still contains the quoted text.
+4. A visible `detached` state when no anchor remains.
 
-Show the arithmetic: 5000/1800 = 2.777. Worth a footnote so the floor is checkable.
-```
+Injected highlights and pins do not affect anchor hashes. Leaving review mode removes every injected page node.
 
-## How anchors survive an edit
+## Storage and privacy
 
-Each comment stores a structural path (`div:1>header:1>p:1`), a hash of the
-block's text, the quoted text, and character offsets into the block. On reload
-the library tries, in order: the path with a matching hash → any block whose
-hash matches (the block moved) → any block containing the quoted text →
-give up. Comments in the last two states are flagged **moved** / **detached**
-in the sidebar and in the generated prompt, so a stale comment is visible
-rather than silently misattached.
+The script loader stores comments in `localStorage`. The extension stores comments in `chrome.storage.local`. Both use a page-specific `reviewmode:v1:` key.
 
-Offsets and hashes are computed over the page's *authored* text: the
-highlight `<mark>`s and pins the library injects are excluded, so annotating
-one block never shifts another block's anchor. Leaving review mode unwinds
-every injected node — the document's markup returns byte-identical.
-
-## Where comments live
-
-`localStorage` under `reviewmode:v1:<origin><pathname>` for the script tag,
-`chrome.storage.local` under the same key for the extension. Per page, on your
-machine, never sent anywhere. Nothing is written until you save a comment.
-
-Note the two stores are separate: a comment made through the extension on a
-page that also loads the script tag is stored by whichever copy owns the page.
+Review Mode has no analytics, account, backend, or runtime network request. A local page keeps its comments on the current machine.
 
 ## API
 
-`window.ReviewMode` — `toggle()`, `activate()`, `deactivate()`, `count()`,
-`notes()`, `prompt()`, `clear()`. Identical surface whether the object is the
-owner or the cross-world proxy.
+`window.ReviewMode` exposes:
+
+```js
+ReviewMode.toggle()
+ReviewMode.activate()
+ReviewMode.deactivate()
+ReviewMode.show(true)
+ReviewMode.count()
+ReviewMode.notes()
+ReviewMode.prompt()
+ReviewMode.clear()
+```
+
+The extension and script loader expose the same core behavior.
+
+## Project layout
+
+```text
+review-mode.js           Browser runtime and single source of product behavior
+bin/review-mode.mjs      One-line HTML and hook installer
+hooks/post-tool-use.mjs  Optional Claude Code hook
+lib/install.mjs          Shared idempotent installer logic
+skills/review-mode/      Agent skill discovered by npx skills
+manifest.json            Chrome Manifest V3 package
+demo/index.html          Manual browser demo
+tests/                   Node-based installer and release checks
+```
+
+## Contributing
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Run `npm test` and exercise `demo/index.html` in a browser.
+
+Use [GitHub Issues](https://github.com/H3xept/review_mode/issues) for bugs and focused proposals. Report security problems through [GitHub private vulnerability reporting](https://github.com/H3xept/review_mode/security/advisories/new).
+
+## License
+
+Review Mode uses the [MIT License](LICENSE).

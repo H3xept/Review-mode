@@ -1,0 +1,47 @@
+{
+  "name": "@h3xept/review-mode",
+  "version": "1.0.0",
+  "description": "Annotate any HTML page and export agent-ready review feedback.",
+  "license": "MIT",
+  "author": "H3xept contributors",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/H3xept/review_mode.git"
+  },
+  "homepage": "https://github.com/H3xept/review_mode#readme",
+  "bugs": {
+    "url": "https://github.com/H3xept/review_mode/issues"
+  },
+  "type": "module",
+  "bin": {
+    "review-mode": "bin/review-mode.mjs"
+  },
+  "files": [
+    "bin/",
+    "hooks/",
+    "lib/",
+    "skills/",
+    "LICENSE",
+    "README.md",
+    "review-mode.js"
+  ],
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "annotation",
+    "agent-skill",
+    "code-review",
+    "feedback",
+    "html",
+    "review"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "unpkg": "review-mode.js",
+  "jsdelivr": "review-mode.js"
+}
